@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/Ecommerce_Application/Ecommerce_Application.iml" filepath="$PROJECT_DIR$/Ecommerce_Application/Ecommerce_Application.iml" />
       <module fileurl="file://$PROJECT_DIR$/team30_swd.iml" filepath="$PROJECT_DIR$/team30_swd.iml" />
     </modules>
   </component>
