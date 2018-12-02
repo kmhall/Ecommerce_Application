@@ -173,7 +173,6 @@ public class Client extends JFrame {
                         }
                         logInButton.setVisible(false);
                         createAccount.setVisible(false);
-
                     }
                 }
             } catch (ClassNotFoundException classNotFoundException){
