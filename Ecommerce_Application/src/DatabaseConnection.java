@@ -126,7 +126,7 @@ public class DatabaseConnection {
      * @return If the id is valid, the id will be returned, otherwise return null
      */
     public String buyItem(String id){
-        String output = null;
+        String output = "invalidItem";
         try {
             //establish connection to database
             connection = DriverManager.getConnection(DATABASE_URL,USERNAME,PASSWORD);
@@ -140,10 +140,11 @@ public class DatabaseConnection {
                     break;
                 }
             }//end while
-
-            String query = " DELETE FROM items WHERE id = \'" + id + "\'";
-            statement.executeUpdate(query);
-
+            if(output.equals(id)) {
+                System.out.println("Item with ID "+ id +" was bought from the market.");
+                String query = " DELETE FROM items WHERE id = \'" + id + "\'";
+                statement.executeUpdate(query);
+            }
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -177,9 +178,11 @@ public class DatabaseConnection {
             //create Statement for querying database
             statement = connection.createStatement();
 
+            System.out.println("User "+ arr[3] + "placed +"+ arr[0] +"on the market for $" + arr[1]);
             String query = " INSERT INTO items (item,price,description,seller) VALUES ('Temp', '5000','Too cool for school', 'MUAH')";
 
             statement.executeUpdate(query);
+
 
         } catch (SQLException e) {
             e.printStackTrace();
