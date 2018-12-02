@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -66,8 +67,11 @@ public class Client extends JFrame {
         setLayout(new BoxLayout(getContentPane(), BoxLayout.PAGE_AXIS));
 
         buy = new JButton("Buy");
+        buy.setAlignmentX(Component.CENTER_ALIGNMENT);
         buyItemID = new JTextField(20);
         buyItemID.setMaximumSize( buyItemID.getPreferredSize() );
+        sell = new JButton("Sell item");
+        sell.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         displayArea = new JTextArea();
         add(new JScrollPane(displayArea), BorderLayout.CENTER);
@@ -81,6 +85,8 @@ public class Client extends JFrame {
 
         add(buyItemID);
         add(buy);
+        add(sell);
+        sell.setVisible(false);
         buy.setVisible(false);
         buyItemID.setVisible(false);
 
@@ -141,10 +147,33 @@ public class Client extends JFrame {
      */
     private void processConnection() throws IOException{
         String message = "";
+        int counter = 0;
         do{
             try{
                 message = (String) input.readObject();
-                displayMessage("\n" + message);
+                if (counter == 0){
+                    displayMessage("\n" + message);
+                    counter++;
+                }
+                else{
+                    System.out.println(message == null);
+                    if (message != null){
+                        String[] person = message.split(",");
+                        if (person[2].equals("1")){
+                            buyItemID.setVisible(true);
+                            buy.setVisible(true);
+                        }
+                        if (person[3].toCharArray()[0] == '1'){ // for extra character at end of string, probably a "\n"
+                            sell.setVisible(true);
+                        }
+                        logInButton.setVisible(false);
+                        createAccount.setVisible(false);
+                    }
+                    else{
+                        JOptionPane.showMessageDialog(null, "Incorrect log in credentials");
+                        message = "";
+                    }
+                }
             } catch (ClassNotFoundException classNotFoundException){
                 displayMessage("\nUnknown object type received");
             }
@@ -230,10 +259,15 @@ public class Client extends JFrame {
                             @Override
                             public void actionPerformed(ActionEvent e) {
                                 String message = "1,";
-                                message = message + username.getText() + "," + password.getText();
-                                sendData(message);
-                                buyItemID.setVisible(true);
-                                buy.setVisible(true);
+                                if (username.getText().equals("") || password.getText().equals("")){
+                                    message = message + username.getText() + "," + password.getText();
+                                    sendData(message);
+                                    loggingin.dispatchEvent(new WindowEvent(loggingin, WindowEvent.WINDOW_CLOSING));
+                                }
+                                else {
+                                    JOptionPane.showMessageDialog(null, "Please fill in all fields");
+                                }
+
                             }
                         }
                 );
@@ -280,22 +314,26 @@ public class Client extends JFrame {
                         new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) {
-                                String message = "0,";
-                                message = message + username.getText() + "," + password.getText() + ",";
-                                if (buyerCheck.isSelected()){
-                                    message = message + "1";
-                                    if (sellerCheck.isSelected()){
-                                        message = message + "," + "1";
-                                    }
-                                    else{
-                                        message = message + "," + "0";
-                                    }
+                                if (username.getText().equals("")|| username.getText().equals("") || (!buyerCheck.isSelected() && !sellerCheck.isSelected())){
+                                    JOptionPane.showMessageDialog(null, "Please fill in all fields");
                                 }
-                                else if (sellerCheck.isSelected()){
-                                    message = message + "0" + "," + "1";
-                                }
-                                if (buyerCheck.isSelected() || sellerCheck.isSelected()){
+                                else{
+                                    String message = "0,";
+                                    message = message + username.getText() + "," + password.getText() + ",";
+                                    if (buyerCheck.isSelected()){
+                                        message = message + "1";
+                                        if (sellerCheck.isSelected()){
+                                            message = message + "," + "1";
+                                        }
+                                        else{
+                                            message = message + "," + "0";
+                                        }
+                                    }
+                                    else if (sellerCheck.isSelected()){
+                                        message = message + "0" + "," + "1";
+                                    }
                                     sendData(message);
+                                    createAccount.dispatchEvent(new WindowEvent(createAccount, WindowEvent.WINDOW_CLOSING));
                                 }
                             }
                         }

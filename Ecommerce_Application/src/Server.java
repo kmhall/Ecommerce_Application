@@ -94,7 +94,7 @@ public class Server {
 
 
         String message = "Connection Successful";
-        sendData(message);
+        //sendData(message);
 
         String itemList  = databaseConnection.getItems();
         sendData(itemList);
@@ -128,6 +128,7 @@ public class Server {
 
                     validationStatus = databaseConnection.validateLogin(messageWithoutFirstIndex);
                     System.out.println(validationStatus);
+                    sendData(validationStatus);
                 }
                 //Sell
                 else if(messageArray[0].equals("2")){
@@ -151,7 +152,7 @@ public class Server {
      */
     private void sendData(String message){
         try {
-            output.writeObject("Server>> " + message);
+            output.writeObject(message);
             output.flush();
         } catch (IOException ioException){
             System.out.println("Error writing object.");
