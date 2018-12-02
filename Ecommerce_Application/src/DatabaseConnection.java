@@ -12,25 +12,10 @@ public class DatabaseConnection {
     ResultSet resultSet = null;
 
 
-    public void closeOperation(){
-        try {
-            resultSet.close();
-            statement.close();
-            connection.close();
-        } //end try
-        catch (SQLException e) {
-            e.printStackTrace();
-        }//end catch
-    }
 
+//    String accountInfo
     public void createUser(){
-
-
-    }
-
-
-    public String getItems(){
-        String itemList  = "";
+//        String[] arr = accountInfo.split(",");
 
         try {
             //establish connection to database
@@ -39,38 +24,35 @@ public class DatabaseConnection {
             //create Statement for querying database
             statement = connection.createStatement();
 
-            //query database
-            resultSet = statement.executeQuery("SELECT * FROM `items`");
+            String query = " INSERT INTO users (username,password,buy,sell) VALUES ('Brad', '456','1', '1')";
 
-            //process query results
-            ResultSetMetaData metaData = resultSet.getMetaData();
-            int numberOfColumns = metaData.getColumnCount();
+            statement.executeUpdate(query);
 
-            while (resultSet.next()){
-                for(int i=1; i<numberOfColumns;i++){
-                    if(i +1 != numberOfColumns){
-                        itemList += resultSet.getString(i) + ",";
-
-                    }else{
-                        itemList += resultSet.getString(i) + "\n";
-                    }
-                }//end while
-            }//end while
         } catch (SQLException e) {
             e.printStackTrace();
         }
         finally {
-            closeOperation();
+            try {
+                statement.close();
+                connection.close();
+            } //end try
+            catch (SQLException e) {
+                e.printStackTrace();
+            }//end catch
         }
-        return itemList;
     }
 
+//    public String validateLogin(String[] arr){
+//
+//    }
 
-    public void connect(){
+
+    public String getItems() {
+        String itemList = "";
+
         try {
-
             //establish connection to database
-            connection = DriverManager.getConnection(DATABASE_URL,USERNAME,PASSWORD);
+            connection = DriverManager.getConnection(DATABASE_URL, USERNAME, PASSWORD);
 
             //create Statement for querying database
             statement = connection.createStatement();
@@ -82,28 +64,30 @@ public class DatabaseConnection {
             ResultSetMetaData metaData = resultSet.getMetaData();
             int numberOfColumns = metaData.getColumnCount();
 
-            for(int i=1;i<numberOfColumns;i++){
-                System.out.print(metaData.getColumnName(i) + " ");
-            }
-            System.out.println("\n");
+            while (resultSet.next()) {
+                for (int i = 1; i < numberOfColumns; i++) {
+                    if (i + 1 != numberOfColumns) {
+                        itemList += resultSet.getString(i) + ",";
 
-            while (resultSet.next()){
-                for(int i=1; i<numberOfColumns;i++){
-                    System.out.print(resultSet.getObject(i));
+                    } else {
+                        itemList += resultSet.getString(i) + "\n";
+                    }
                 }//end for
             }//end while
-
         } catch (SQLException e) {
             e.printStackTrace();
-        }//end catch
-
-         finally {
-           closeOperation();
-        }//end finally
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } //end try
+            catch (SQLException e) {
+                e.printStackTrace();
+            }//end catch        }
+            return itemList;
+        }
     }
-
-
-
 }
 
 

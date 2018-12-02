@@ -43,6 +43,7 @@ public class Server {
     public Server(){
 
         databaseConnection = new DatabaseConnection();
+        databaseConnection.createUser();
 
         try{
             server = new ServerSocket(123, 100);
