@@ -12,6 +12,11 @@ import java.net.Socket;
  */
 public class Server {
     /**
+     * Databbase connection
+     */
+    private DatabaseConnection databaseConnection;
+
+    /**
      * ServerSocket object to assign a specific port to the server
      */
     private ServerSocket server; // server socket
@@ -35,6 +40,10 @@ public class Server {
      * Server class constructor, creates the initializes the ServerSocket object
      */
     public Server(){
+
+        databaseConnection = new DatabaseConnection();
+        databaseConnection.connect();
+
         try{
             server = new ServerSocket(123, 100);
             while (true){
@@ -121,4 +130,9 @@ public class Server {
             ioException.printStackTrace();
         }
     }
+
+
 }
+
+
+

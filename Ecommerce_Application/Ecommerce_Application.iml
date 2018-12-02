@@ -7,10 +7,10 @@
     </content>
     <orderEntry type="jdk" jdkName="1.8" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module-library">
+    <orderEntry type="module-library" exported="">
       <library>
         <CLASSES>
-          <root url="jar://$USER_HOME$/Downloads/Software Design/Team Project/sql/mysql-connector-java-5.1.18/mysql-connector-java-5.1.18-bin.jar!/" />
+          <root url="jar://$MODULE_DIR$/../mysql-connector-java-5.1.18/mysql-connector-java-5.1.18-bin.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
