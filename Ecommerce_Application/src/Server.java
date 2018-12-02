@@ -116,7 +116,8 @@ public class Server{
             String message = "Connection Successful";
             //sendData(message);
 
-            String itemList  = databaseConnection.getItems();
+
+            String itemList  = "items,"+ databaseConnection.getItems();
             sendData(itemList);
 
             do {
@@ -153,10 +154,13 @@ public class Server{
                 //Sell
                 else if(messageArray[0].equals("2")){
                     databaseConnection.sellItem(messageWithoutFirstIndex);
+                    sendToAllClients();
                 }
                 //Buy
                 else if(messageArray[0].equals("3")){
                     validationStatus = databaseConnection.buyItem(messageWithoutFirstIndex);
+                    sendToAllClients();
+
 
                 }
 //                System.out.println(message);
@@ -179,9 +183,11 @@ public class Server{
             }
         }
 
-        private void sendToAllClients(String message){
+        private void sendToAllClients(){
+            String x = "items,";
+             x += databaseConnection.getItems();
             for (ConnectionsFromServer c: connections){
-                c.sendData(message);
+                c.sendData(x);
             }
         }
 
