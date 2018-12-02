@@ -153,7 +153,6 @@ public class Server{
                 }
                 //Sell
                 else if(messageArray[0].equals("2")){
-                    System.out.println("hi");
                     databaseConnection.sellItem(messageWithoutFirstIndex);
                     sendToAllClients();
                 }
