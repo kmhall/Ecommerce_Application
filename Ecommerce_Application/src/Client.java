@@ -156,7 +156,6 @@ public class Client extends JFrame {
                     counter++;
                 }
                 else{
-                    System.out.println(message == null);
                     if (message != null){
                         String[] person = message.split(",");
                         if (person[2].equals("1")){
