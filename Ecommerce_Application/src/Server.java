@@ -37,14 +37,18 @@ public class Server {
     public Server(){
         try{
             server = new ServerSocket(123, 100);
-            try{
-                waitForConnection();
-                getStreams();
-                processConnection();
-                closeConnections();
-            }
-            catch (EOFException eofException){
-                System.out.println("Server terminated connection");
+            while (true){
+                try{
+                    waitForConnection();
+                    getStreams();
+                    processConnection();
+                }
+                catch (EOFException eofException){
+                    System.out.println("Server terminated connection");
+                }
+                finally {
+                    closeConnections();
+                }
             }
         }
         catch (IOException ioException){
@@ -87,7 +91,7 @@ public class Server {
             } catch (ClassNotFoundException classNotFoundException){
                 System.out.println("Unknown object type received");
             }
-        } while ( !message.equals("Client>>TERMINATE"));
+        } while ( !message.equals("Client>> TERMINATE"));
     }
 
     /**
@@ -96,7 +100,7 @@ public class Server {
      */
     private void sendData(String message){
         try {
-            output.writeObject("Server>>" + message);
+            output.writeObject("Server>> " + message);
             output.flush();
         } catch (IOException ioException){
             System.out.println("Error writing object.");
