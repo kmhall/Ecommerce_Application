@@ -40,13 +40,24 @@ public class Client extends JFrame {
     private Socket client;
 
     /**
+     * Creates a button for the user to log-in
+     */
+    private JButton logInButton;
+
+    /**
+     * creates a button for the user to create an account
+     */
+    private JButton createAccount;
+
+    /**
      * Constructor for Client class, initializes Swing components
      */
     public Client(){
         super("Store");
-        //setLayout(new BoxLayout(getContentPane(), BoxLayout.PAGE_AXIS));
+        setLayout(new BoxLayout(getContentPane(), BoxLayout.PAGE_AXIS));
 
-        enterField = new JTextField();
+        enterField = new JTextField(10);
+        enterField.setMaximumSize(enterField.getPreferredSize());
         enterField.setEditable(false);
         enterField.addActionListener(
                 new ActionListener() {
@@ -62,6 +73,11 @@ public class Client extends JFrame {
 
         displayArea = new JTextArea();
         add(new JScrollPane(displayArea), BorderLayout.CENTER);
+
+        logInButton = new JButton("Log In");
+        createAccount = new JButton("Create Account");
+        add(logInButton);
+        add(createAccount);
 
         setSize(300,300);
         setVisible(true);
@@ -167,6 +183,17 @@ public class Client extends JFrame {
                     @Override
                     public void run() {
                         displayArea.append(messageToDisplay);
+                    }
+                }
+        );
+    }
+
+    private void displayButton(){
+        SwingUtilities.invokeLater(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        add(new JButton("Buy"), BorderLayout.CENTER);
                     }
                 }
         );
