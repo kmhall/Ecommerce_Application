@@ -156,8 +156,13 @@ public class Client extends JFrame {
                     counter++;
                 }
                 else{
-                    System.out.println(message == null);
-                    if (message != null){
+                    if(message.equals("userInDatabase")){
+                        JOptionPane.showMessageDialog(null, "Username already taken\n");
+                    }
+                    else if(message.equals("incorrectCredentials")){
+                        JOptionPane.showMessageDialog(null, "Incorrect log in credentials");
+                    }
+                    else{
                         String[] person = message.split(",");
                         if (person[2].equals("1")){
                             buyItemID.setVisible(true);
@@ -168,10 +173,7 @@ public class Client extends JFrame {
                         }
                         logInButton.setVisible(false);
                         createAccount.setVisible(false);
-                    }
-                    else{
-                        JOptionPane.showMessageDialog(null, "Incorrect log in credentials");
-                        message = "";
+
                     }
                 }
             } catch (ClassNotFoundException classNotFoundException){

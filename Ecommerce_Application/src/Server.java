@@ -81,11 +81,12 @@ public class Server implements Runnable{
                     }
                 }
 
-                String validationStatus = "";
+                String validationStatus;
 
                 //Create user
                 if(messageArray[0].equals("0")) {
                     validationStatus = databaseConnection.createUser(messageWithoutFirstIndex);
+                    sendData(validationStatus);
                     System.out.println(validationStatus);
                 }
                 //Login
