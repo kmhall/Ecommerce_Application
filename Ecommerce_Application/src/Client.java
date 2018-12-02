@@ -40,6 +40,11 @@ public class Client extends JFrame {
     private JButton buy;
 
     /**
+     * Create textField to use for buying items
+     */
+    private JTextField buyItemID;
+
+    /**
      * Create sell button to be displayed for sellers
      */
     private JButton sell;
@@ -60,8 +65,12 @@ public class Client extends JFrame {
         super("Store");
         setLayout(new BoxLayout(getContentPane(), BoxLayout.PAGE_AXIS));
 
+        buy = new JButton("Buy");
+        buyItemID = new JTextField(20);
+        buyItemID.setMaximumSize( buyItemID.getPreferredSize() );
+
         displayArea = new JTextArea();
-        add(new JScrollPane(displayArea), BorderLayout.NORTH);
+        add(new JScrollPane(displayArea), BorderLayout.CENTER);
 
         logInButton = new JButton("Log In");
         logInButton.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -70,9 +79,15 @@ public class Client extends JFrame {
         createAccount.setAlignmentX(Component.CENTER_ALIGNMENT);
         add(createAccount);
 
+        add(buyItemID);
+        add(buy);
+        buy.setVisible(false);
+        buyItemID.setVisible(false);
+
         ActionHandler handler = new ActionHandler();
         logInButton.addActionListener(handler);
         createAccount.addActionListener(handler);
+        buy.addActionListener(handler);
 
         setSize(600,600);
         setVisible(true);
@@ -217,6 +232,8 @@ public class Client extends JFrame {
                                 String message = "1,";
                                 message = message + username.getText() + "," + password.getText();
                                 sendData(message);
+                                buyItemID.setVisible(true);
+                                buy.setVisible(true);
                             }
                         }
                 );
