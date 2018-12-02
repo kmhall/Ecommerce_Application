@@ -12,7 +12,7 @@ import java.net.Socket;
  */
 public class Server {
     /**
-     * Databbase connection
+     * Database connection
      */
     private DatabaseConnection databaseConnection;
 
@@ -37,7 +37,8 @@ public class Server {
     private ObjectInputStream input; // input stream to client
 
     /**
-     * Server class constructor, creates the initializes the ServerSocket object
+     * Server class constructor, creates and initializes the ServerSocket object, also
+     * pulls data from database
      */
     public Server(){
 
@@ -46,14 +47,18 @@ public class Server {
 
         try{
             server = new ServerSocket(123, 100);
-            try{
-                waitForConnection();
-                getStreams();
-                processConnection();
-                closeConnections();
-            }
-            catch (EOFException eofException){
-                System.out.println("Server terminated connection");
+            while (true){
+                try{
+                    waitForConnection();
+                    getStreams();
+                    processConnection();
+                }
+                catch (EOFException eofException){
+                    System.out.println("Server terminated connection");
+                }
+                finally {
+                    closeConnections();
+                }
             }
         }
         catch (IOException ioException){
@@ -96,7 +101,7 @@ public class Server {
             } catch (ClassNotFoundException classNotFoundException){
                 System.out.println("Unknown object type received");
             }
-        } while ( !message.equals("Client>>TERMINATE"));
+        } while ( !message.equals("Client>> TERMINATE"));
     }
 
     /**
@@ -105,7 +110,7 @@ public class Server {
      */
     private void sendData(String message){
         try {
-            output.writeObject("Server>>" + message);
+            output.writeObject("Server>> " + message);
             output.flush();
         } catch (IOException ioException){
             System.out.println("Error writing object.");
@@ -126,7 +131,6 @@ public class Server {
             ioException.printStackTrace();
         }
     }
-
 
 }
 
