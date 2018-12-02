@@ -134,6 +134,8 @@ public class DatabaseConnection {
             //create Statement for querying database
             statement = connection.createStatement();
 
+            resultSet = statement.executeQuery("SELECT * FROM `items`");
+
             while (resultSet.next()){
                 if(resultSet.getInt(1) == Integer.parseInt(id)){
                     output = id;
@@ -151,6 +153,7 @@ public class DatabaseConnection {
         }
         finally {
             try {
+                resultSet.close();
                 statement.close();
                 connection.close();
             } //end try
