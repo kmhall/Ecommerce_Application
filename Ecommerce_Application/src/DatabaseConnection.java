@@ -27,14 +27,15 @@ public class DatabaseConnection {
             //process query results
             ResultSetMetaData metaData = resultSet.getMetaData();
             int numberOfColumns = metaData.getColumnCount();
-//
-//            for(int i=1;i<numberOfColumns;i++){
-//                System.out.println(metaData.getColumnName(i));
-//            }
+
+            for(int i=1;i<numberOfColumns;i++){
+                System.out.print(metaData.getColumnName(i) + " ");
+            }
+            System.out.println("\n");
 
             while (resultSet.next()){
                 for(int i=1; i<numberOfColumns;i++){
-                    System.out.println(resultSet.getObject(i));
+                    System.out.print(resultSet.getObject(i));
                 }//end while
             }//end try
 
