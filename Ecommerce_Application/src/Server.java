@@ -12,7 +12,7 @@ import java.net.Socket;
  */
 public class Server {
     /**
-     * Databbase connection
+     * Database connection
      */
     private DatabaseConnection databaseConnection;
 
@@ -37,7 +37,8 @@ public class Server {
     private ObjectInputStream input; // input stream to client
 
     /**
-     * Server class constructor, creates the initializes the ServerSocket object
+     * Server class constructor, creates and initializes the ServerSocket object, also
+     * pulls data from database
      */
     public Server(){
 
@@ -130,7 +131,6 @@ public class Server {
             ioException.printStackTrace();
         }
     }
-
 
 }
 

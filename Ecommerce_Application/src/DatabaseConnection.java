@@ -52,10 +52,5 @@ public class DatabaseConnection {
                 e.printStackTrace();
             }//end catch
         }//end finally
-
-
-
     }
-
-
 }
