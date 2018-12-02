@@ -146,7 +146,6 @@ public class Server{
                 }
                 //Login
                 else if(messageArray[0].equals("1")){
-
                     validationStatus = databaseConnection.validateLogin(messageWithoutFirstIndex);
                     System.out.println(validationStatus);
                     sendData(validationStatus);
@@ -159,7 +158,7 @@ public class Server{
                 else if(messageArray[0].equals("3")){
                     validationStatus = databaseConnection.buyItem(messageWithoutFirstIndex);
 
-                    }
+                }
 //                System.out.println(message);
                 } catch (ClassNotFoundException classNotFoundException){
                     System.out.println("Unknown object type received");
