@@ -23,6 +23,12 @@ public class DatabaseConnection {
         }//end catch
     }
 
+    public void createUser(){
+
+
+    }
+
+
     public String getItems(){
         String itemList  = "";
 
@@ -49,17 +55,13 @@ public class DatabaseConnection {
                         itemList += resultSet.getString(i) + "\n";
                     }
                 }//end while
-
             }//end while
-
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
         finally {
             closeOperation();
         }
-
         return itemList;
     }
 
