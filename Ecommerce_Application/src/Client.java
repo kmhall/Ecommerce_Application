@@ -122,11 +122,11 @@ public class Client extends JFrame {
      * @throws IOException if connection failed, throws this exception
      */
     private void connectToServer() throws IOException{
-        displayMessage("Attempting connection\n");
+        //displayMessage("Attempting connection\n");
 
         client = new Socket( InetAddress.getLocalHost(), 123);
 
-        displayMessage("Connected to: " + client.getInetAddress().getHostName());
+        //displayMessage("Connected to: " + client.getInetAddress().getHostName());
     }
 
     /**
@@ -138,7 +138,7 @@ public class Client extends JFrame {
         output.flush();
 
         input = new ObjectInputStream(client.getInputStream());
-        displayMessage("\nGot I/O streams\n");
+        //displayMessage("\nGot I/O streams\n");
     }
 
     /**
@@ -182,7 +182,7 @@ public class Client extends JFrame {
      * (probably not necessary but added for now just in case)
      */
     private void closeConnections(){
-        displayMessage("\nClosing connection");
+        //displayMessage("\nClosing connection");
 
         try{
             output.close();
@@ -216,7 +216,7 @@ public class Client extends JFrame {
                 new Runnable() {
                     @Override
                     public void run() {
-                        displayArea.append(messageToDisplay);
+                        displayArea.setText(messageToDisplay);
                     }
                 }
         );
