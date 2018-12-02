@@ -147,33 +147,29 @@ public class Client extends JFrame {
      */
     private void processConnection() throws IOException{
         String message = "";
-        int counter = 0;
         do{
             try{
                 message = (String) input.readObject();
-                if (counter == 0){
+                if (message.split(",")[0].equals("items")){
                     displayMessage("\n" + message);
-                    counter++;
+                }
+                else if(message.equals("userInDatabase")){
+                    JOptionPane.showMessageDialog(null, "Username already taken\n");
+                }
+                else if(message.equals("incorrectCredentials")){
+                    JOptionPane.showMessageDialog(null, "Incorrect log in credentials");
                 }
                 else{
-                    if(message.equals("userInDatabase")){
-                        JOptionPane.showMessageDialog(null, "Username already taken\n");
+                    String[] person = message.split(",");
+                    if (person[2].equals("1")){
+                        buyItemID.setVisible(true);
+                        buy.setVisible(true);
                     }
-                    else if(message.equals("incorrectCredentials")){
-                        JOptionPane.showMessageDialog(null, "Incorrect log in credentials");
+                    if (person[3].toCharArray()[0] == '1'){ // for extra character at end of string, probably a "\n"
+                        sell.setVisible(true);
                     }
-                    else{
-                        String[] person = message.split(",");
-                        if (person[2].equals("1")){
-                            buyItemID.setVisible(true);
-                            buy.setVisible(true);
-                        }
-                        if (person[3].toCharArray()[0] == '1'){ // for extra character at end of string, probably a "\n"
-                            sell.setVisible(true);
-                        }
-                        logInButton.setVisible(false);
-                        createAccount.setVisible(false);
-                    }
+                    logInButton.setVisible(false);
+                    createAccount.setVisible(false);
                 }
             } catch (ClassNotFoundException classNotFoundException){
                 displayMessage("\nUnknown object type received");
