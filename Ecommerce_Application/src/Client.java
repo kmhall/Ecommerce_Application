@@ -94,6 +94,7 @@ public class Client extends JFrame {
         logInButton.addActionListener(handler);
         createAccount.addActionListener(handler);
         buy.addActionListener(handler);
+        sell.addActionListener(handler);
 
         setSize(600,600);
         setVisible(true);
@@ -340,6 +341,78 @@ public class Client extends JFrame {
                 contentPane.add(buyerAndSeller, BorderLayout.EAST);
                 contentPane.add(submit, BorderLayout.SOUTH);
                 createAccount.setVisible(true);
+            }
+            else if (e.getSource() == buy){
+                String itemID = "3," + buyItemID.getText();
+                sendData(itemID);
+            }
+            else if (e.getSource() == sell){
+                JFrame sellItem = new JFrame("Item to sell");
+                sellItem.setSize(400, 300);
+
+                Container contentPane = sellItem.getContentPane();
+
+                JPanel itemNamePanel = new JPanel();
+                itemNamePanel.setLayout(new BoxLayout(itemNamePanel, BoxLayout.LINE_AXIS));
+                JLabel itemNameLabel = new JLabel("Item Name:");
+                JTextField itemName = new JTextField(20);
+                itemName.setMaximumSize( itemName.getPreferredSize() );
+                itemNamePanel.add(itemNameLabel);
+                itemNamePanel.add(itemName);
+
+                JPanel sellerNamePanel = new JPanel();
+                sellerNamePanel.setLayout(new BoxLayout(sellerNamePanel, BoxLayout.LINE_AXIS));
+                JLabel sellerNameLabel = new JLabel("Seller Name:");
+                JTextField sellerName = new JTextField(20);
+                sellerName.setMaximumSize( sellerName.getPreferredSize() );
+                sellerNamePanel.add(sellerNameLabel);
+                sellerNamePanel.add(sellerName);
+                //passwordPanel.setBorder(BorderFactory.createEmptyBorder(30,10,30,10));
+
+                JPanel pricePanel = new JPanel();
+                pricePanel.setLayout(new BoxLayout(pricePanel, BoxLayout.LINE_AXIS));
+                JLabel priceLabel = new JLabel("Price:");
+                JTextField price = new JTextField(20);
+                price.setMaximumSize( price.getPreferredSize() );
+                pricePanel.add(priceLabel);
+                pricePanel.add(price);
+
+                JPanel descriptionPanel = new JPanel();
+                descriptionPanel.setLayout(new BoxLayout(descriptionPanel, BoxLayout.LINE_AXIS));
+                JLabel descriptionLabel = new JLabel("Description:");
+                JTextField description = new JTextField(20);
+                description.setMaximumSize( price.getPreferredSize() );
+                descriptionPanel.add(descriptionLabel);
+                descriptionPanel.add(description);
+
+                JButton submit = new JButton("Sell Item");
+                submit.addActionListener(
+                        new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                               if (itemName.getText().equals("") || sellerName.getText().equals("") || price.getText().equals("") || description.getText().equals("")) {
+                                   JOptionPane.showMessageDialog(null, "Please fill in all fields");
+                               }
+                               else{
+                                   String message = "2,";
+                                   message = message + itemName.getText() + "," + price.getText() + "," + description.getText() + "," + sellerName.getText();
+                                   sendData(message);
+                                   sellItem.dispatchEvent(new WindowEvent(sellItem, WindowEvent.WINDOW_CLOSING));
+                               }
+                            }
+                        }
+                );
+
+                JPanel info = new JPanel();
+                info.setLayout(new BoxLayout(info, BoxLayout.PAGE_AXIS));
+                info.add(sellerNamePanel, BorderLayout.NORTH);
+                info.add(pricePanel, BorderLayout.CENTER);
+                info.add(descriptionPanel, BorderLayout.SOUTH);
+
+                contentPane.add(itemNamePanel, BorderLayout.NORTH);
+                contentPane.add(info, BorderLayout.CENTER);
+                contentPane.add(submit, BorderLayout.SOUTH);
+                sellItem.setVisible(true);
             }
         }
     }
