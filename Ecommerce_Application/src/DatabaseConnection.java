@@ -12,19 +12,13 @@ public class DatabaseConnection {
     ResultSet resultSet = null;
 
 
-    public void closeOperation(){
-        try {
-            resultSet.close();
-            statement.close();
-            connection.close();
-        } //end try
-        catch (SQLException e) {
-            e.printStackTrace();
-        }//end catch
-    }
 
-    public String getItems(){
-        String itemList  = "";
+    /**
+     * Adds a user's information to the database
+     * @param accountInfo String, account info in format `username,password,buy,sell`.
+     */
+    public void createUser(String accountInfo){
+        String[] arr = accountInfo.split(",");
 
         try {
             //establish connection to database
@@ -33,42 +27,167 @@ public class DatabaseConnection {
             //create Statement for querying database
             statement = connection.createStatement();
 
+            String query = " INSERT INTO users (username,password,buy,sell) VALUES ('Brad', '456','1', '1')";
+
+            statement.executeUpdate(query);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            try {
+                statement.close();
+                connection.close();
+            } //end try
+            catch (SQLException e) {
+                e.printStackTrace();
+            }//end catch
+        }
+    }
+
+    /**
+     *  Validates if the username and password are both in the database.
+     * @param accountInfo Takes a String in format 'username,password'
+     * @return String, If id and password match ones in the database then return user data, otherwise return null.
+     */
+    public String validateLogin(String accountInfo) {
+
+        String[] arr = accountInfo.split(",");
+
+        String output = null;
+        try {
+            //establish connection to database
+            connection = DriverManager.getConnection(DATABASE_URL, USERNAME, PASSWORD);
+
+            //create Statement for querying database
+            statement = connection.createStatement();
+
             //query database
-            resultSet = statement.executeQuery("SELECT * FROM `items`");
+            resultSet = statement.executeQuery("SELECT * FROM `users`");
 
             //process query results
             ResultSetMetaData metaData = resultSet.getMetaData();
             int numberOfColumns = metaData.getColumnCount();
 
-            while (resultSet.next()){
-                for(int i=1; i<numberOfColumns;i++){
-                    if(i +1 != numberOfColumns){
-                        itemList += resultSet.getString(i) + ",";
+            while (resultSet.next()) {
+                if(resultSet.getString(2).equals(arr[0]) && resultSet.getString(3).equals(arr[1])){
+                    output = "";
+                    for(int i = 1; i < numberOfColumns; i++) {
+                        if (i + 1 != numberOfColumns) {
+                            output += resultSet.getString(i) + ",";
 
-                    }else{
-                        itemList += resultSet.getString(i) + "\n";
+                        } else {
+                            output += resultSet.getString(i) + "\n";
+                        }
                     }
-                }//end while
-
+                    break;
+                }
             }//end while
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } //end try
+            catch (SQLException e) {
+                e.printStackTrace();
+            }//end catch
+        }
+        return output;
+    }
+
+    /**
+     * See if the item is within the database, if it is: remove the item.
+     * Otherwise do nothing and return that the input was invalid.
+     *
+     * @param id The id of the item attempted to be bought
+     * @return If the id is valid, the id will be returned, otherwise return null
+     */
+    public String buyItem(String id){
+        String output = null;
+        try {
+            //establish connection to database
+            connection = DriverManager.getConnection(DATABASE_URL,USERNAME,PASSWORD);
+
+            //create Statement for querying database
+            statement = connection.createStatement();
+
+            while (resultSet.next()){
+                if(resultSet.getInt(1) == Integer.parseInt(id)){
+                    output = id;
+                    break;
+                }
+            }//end while
+
+            String query = " DELETE FROM items WHERE id = \'" + id + "\'";
+            statement.executeUpdate(query);
 
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
         finally {
-            closeOperation();
+            try {
+                statement.close();
+                connection.close();
+            } //end try
+            catch (SQLException e) {
+                e.printStackTrace();
+            }//end catch
         }
 
-        return itemList;
+        return output;
     }
 
 
-    public void connect(){
-        try {
+    /**
+     * Adds an item to the database to be sold
+     *
+     * @param itemInfo String of item info in the format `item,price,description,seller`
+     */
+    public void sellItem( String itemInfo){
+        String[] arr = itemInfo.split(",");
 
+        try {
             //establish connection to database
             connection = DriverManager.getConnection(DATABASE_URL,USERNAME,PASSWORD);
+
+            //create Statement for querying database
+            statement = connection.createStatement();
+
+            String query = " INSERT INTO items (item,price,description,seller) VALUES ('Temp', '5000','Too cool for school', 'MUAH')";
+
+            statement.executeUpdate(query);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            try {
+                statement.close();
+                connection.close();
+            } //end try
+            catch (SQLException e) {
+                e.printStackTrace();
+            }//end catch
+        }
+    }
+
+    /**
+     * Gets all the items within the items database.
+     *
+     * @return String, all the items in the database in a csv format.
+     * Each column is comma separated and each row is separated by a new line.
+     */
+    public String getItems() {
+        String itemList = "";
+
+        try {
+            //establish connection to database
+            connection = DriverManager.getConnection(DATABASE_URL, USERNAME, PASSWORD);
 
             //create Statement for querying database
             statement = connection.createStatement();
@@ -80,28 +199,30 @@ public class DatabaseConnection {
             ResultSetMetaData metaData = resultSet.getMetaData();
             int numberOfColumns = metaData.getColumnCount();
 
-            for(int i=1;i<numberOfColumns;i++){
-                System.out.print(metaData.getColumnName(i) + " ");
-            }
-            System.out.println("\n");
+            while (resultSet.next()) {
+                for (int i = 1; i < numberOfColumns; i++) {
+                    if (i + 1 != numberOfColumns) {
+                        itemList += resultSet.getString(i) + ",";
 
-            while (resultSet.next()){
-                for(int i=1; i<numberOfColumns;i++){
-                    System.out.print(resultSet.getObject(i));
+                    } else {
+                        itemList += resultSet.getString(i) + "\n";
+                    }
                 }//end for
             }//end while
-
         } catch (SQLException e) {
             e.printStackTrace();
-        }//end catch
-
-         finally {
-           closeOperation();
-        }//end finally
+        } finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } //end try
+            catch (SQLException e) {
+                e.printStackTrace();
+            }//end catch        }
+            return itemList;
+        }
     }
-
-
-
 }
 
 

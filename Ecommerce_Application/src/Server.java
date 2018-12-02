@@ -102,6 +102,40 @@ public class Server {
         do {
             try{
                 message = (String) input.readObject();
+                String[] messageArray = message.split(",");
+
+                //Create String of the message without the first index
+
+                String messageWithoutFirstIndex = "";
+                for (int i = 1; i < messageArray.length; i++) {
+                    if (i + 1 != messageArray.length) {
+                        messageWithoutFirstIndex += messageArray[i] + ",";
+
+                    } else {
+                        messageWithoutFirstIndex += messageArray[i];
+                    }
+                }
+
+                String validationStatus = "";
+
+                //Create user
+                if(messageArray[0] == "0") {
+                    databaseConnection.createUser(messageWithoutFirstIndex);
+                }
+                //Login
+                else if(messageArray[0] == "1"){
+
+                    validationStatus = databaseConnection.validateLogin(messageWithoutFirstIndex);
+                }
+                //Sell
+                else if(messageArray[0] == "2"){
+                    databaseConnection.buyItem(messageWithoutFirstIndex);
+                }
+                //Buy
+                else if(messageArray[0] == "3"){
+                    validationStatus = databaseConnection.buyItem(messageWithoutFirstIndex);
+
+                }
                 System.out.println(message);
             } catch (ClassNotFoundException classNotFoundException){
                 System.out.println("Unknown object type received");
