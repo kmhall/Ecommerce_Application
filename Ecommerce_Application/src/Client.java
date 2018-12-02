@@ -15,11 +15,6 @@ import java.net.Socket;
  */
 public class Client extends JFrame {
     /**
-     * Creates a Swing component for sending information to the server
-     */
-    private JTextField enterField;
-
-    /**
      * Creates a Swing component for displaying information from the server
      */
     private JTextArea displayArea;
@@ -40,6 +35,15 @@ public class Client extends JFrame {
     private Socket client;
 
     /**
+     * Create buy button to be displayed for buyers
+     */
+    private JButton buy;
+
+    /**
+     * Create sell button to be displayed for sellers
+     */
+    private JButton sell;
+    /**
      * Creates a button for the user to log-in
      */
     private JButton logInButton;
@@ -56,30 +60,21 @@ public class Client extends JFrame {
         super("Store");
         setLayout(new BoxLayout(getContentPane(), BoxLayout.PAGE_AXIS));
 
-        enterField = new JTextField(10);
-        enterField.setMaximumSize(enterField.getPreferredSize());
-        enterField.setEditable(false);
-        enterField.addActionListener(
-                new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        sendData(e.getActionCommand());
-                        enterField.setText("");
-                    }
-                }
-        );
-
-        add(enterField, BorderLayout.NORTH);
-
         displayArea = new JTextArea();
-        add(new JScrollPane(displayArea), BorderLayout.CENTER);
+        add(new JScrollPane(displayArea), BorderLayout.NORTH);
 
         logInButton = new JButton("Log In");
-        createAccount = new JButton("Create Account");
+        logInButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         add(logInButton);
+        createAccount = new JButton("Create Account");
+        createAccount.setAlignmentX(Component.CENTER_ALIGNMENT);
         add(createAccount);
 
-        setSize(300,300);
+        ActionHandler handler = new ActionHandler();
+        logInButton.addActionListener(handler);
+        createAccount.addActionListener(handler);
+
+        setSize(600,600);
         setVisible(true);
     }
 
@@ -130,7 +125,6 @@ public class Client extends JFrame {
      * @throws IOException if connection failed, throws this exception
      */
     private void processConnection() throws IOException{
-        setTextFieldEditable(true);
         String message = "";
         do{
             try{
@@ -148,7 +142,6 @@ public class Client extends JFrame {
      */
     private void closeConnections(){
         displayMessage("\nClosing connection");
-        setTextFieldEditable(false);
 
         try{
             output.close();
@@ -166,7 +159,7 @@ public class Client extends JFrame {
      */
     private void sendData(String message){
         try{
-            output.writeObject("Client>> " + message);
+            output.writeObject(message);
             output.flush();
         } catch (IOException ioException){
             displayArea.append("\nError writing object");
@@ -188,29 +181,115 @@ public class Client extends JFrame {
         );
     }
 
-    private void displayButton(){
-        SwingUtilities.invokeLater(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        add(new JButton("Buy"), BorderLayout.CENTER);
-                    }
-                }
-        );
-    }
-
     /**
-     * sets the JTextField edibility to either true or false
-     * @param editable either true or false
+     * Private class of Client and also implements ActionListener.
+     * @see ActionListener
      */
-    private void setTextFieldEditable (final boolean editable){
-        SwingUtilities.invokeLater(
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        enterField.setEditable(editable);
-                    }
-                }
-        );
+    private class ActionHandler implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            if (e.getSource() == logInButton){
+                JFrame loggingin = new JFrame("Log In");
+                loggingin.setSize(400, 200);
+
+                Container contentPane = loggingin.getContentPane();
+
+                JPanel userNamePanel = new JPanel();
+                userNamePanel.setLayout(new BoxLayout(userNamePanel, BoxLayout.LINE_AXIS));
+                JLabel userNameLabel = new JLabel("Username:");
+                JTextField username = new JTextField();
+                userNamePanel.add(userNameLabel);
+                userNamePanel.add(username);
+
+                JPanel passwordPanel = new JPanel();
+                passwordPanel.setLayout(new BoxLayout(passwordPanel, BoxLayout.LINE_AXIS));
+                JLabel passwordLabel = new JLabel("Password:");
+                JTextField password = new JTextField();
+                passwordPanel.add(passwordLabel);
+                passwordPanel.add(password);
+                passwordPanel.setBorder(BorderFactory.createEmptyBorder(30,10,30,10));
+
+                JButton submit = new JButton("Log In");
+                submit.addActionListener(
+                        new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                String message = "1,";
+                                message = message + username.getText() + "," + password.getText();
+                                sendData(message);
+                            }
+                        }
+                );
+
+                contentPane.add(userNamePanel, BorderLayout.NORTH);
+                contentPane.add(passwordPanel, BorderLayout.CENTER);
+                contentPane.add(submit, BorderLayout.SOUTH);
+                loggingin.setVisible(true);
+            }
+            else if (e.getSource() == createAccount){
+                JFrame createAccount = new JFrame("Create Account");
+                createAccount.setSize(400, 200);
+
+                Container contentPane = createAccount.getContentPane();
+
+                JPanel userNamePanel = new JPanel();
+                userNamePanel.setLayout(new BoxLayout(userNamePanel, BoxLayout.LINE_AXIS));
+                JLabel userNameLabel = new JLabel("Username:");
+                JTextField username = new JTextField();
+                userNamePanel.add(userNameLabel);
+                userNamePanel.add(username);
+
+                JPanel passwordPanel = new JPanel();
+                passwordPanel.setLayout(new BoxLayout(passwordPanel, BoxLayout.LINE_AXIS));
+                JLabel passwordLabel = new JLabel("Password:");
+                JTextField password = new JTextField();
+                passwordPanel.add(passwordLabel);
+                passwordPanel.add(password);
+                //passwordPanel.setBorder(BorderFactory.createEmptyBorder(30,10,30,10));
+
+                JPanel buyerAndSeller = new JPanel();
+                buyerAndSeller.setLayout(new BoxLayout(buyerAndSeller, BoxLayout.LINE_AXIS));
+                JLabel buyerLabel = new JLabel("Buyer:");
+                JCheckBox buyerCheck = new JCheckBox();
+                JLabel sellerLabel = new JLabel("Seller:");
+                JCheckBox sellerCheck = new JCheckBox();
+                buyerAndSeller.add(buyerLabel);
+                buyerAndSeller.add(buyerCheck);
+                buyerAndSeller.add(sellerLabel);
+                buyerAndSeller.add(sellerCheck);
+
+                JButton submit = new JButton("Create Account");
+                submit.addActionListener(
+                        new ActionListener() {
+                            @Override
+                            public void actionPerformed(ActionEvent e) {
+                                String message = "0,";
+                                message = message + username.getText() + "," + password.getText() + ",";
+                                if (buyerCheck.isSelected()){
+                                    message = message + "1";
+                                    if (sellerCheck.isSelected()){
+                                        message = message + "," + "1";
+                                    }
+                                    else{
+                                        message = message + "," + "0";
+                                    }
+                                }
+                                else if (sellerCheck.isSelected()){
+                                    message = message + "0" + "," + "1";
+                                }
+                                if (buyerCheck.isSelected() || sellerCheck.isSelected()){
+                                    sendData(message);
+                                }
+                            }
+                        }
+                );
+
+                contentPane.add(userNamePanel, BorderLayout.NORTH);
+                contentPane.add(passwordPanel, BorderLayout.CENTER);
+                contentPane.add(buyerAndSeller, BorderLayout.EAST);
+                contentPane.add(submit, BorderLayout.SOUTH);
+                createAccount.setVisible(true);
+            }
+        }
     }
 }
