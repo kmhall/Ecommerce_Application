@@ -161,8 +161,6 @@ public class Server{
                 else if(messageArray[0].equals("3")){
                     validationStatus = databaseConnection.buyItem(messageWithoutFirstIndex);
                     sendToAllClients();
-
-
                 }
 //                System.out.println(message);
                 } catch (ClassNotFoundException classNotFoundException){
