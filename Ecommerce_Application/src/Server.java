@@ -43,8 +43,7 @@ public class Server {
     public Server(){
 
         databaseConnection = new DatabaseConnection();
-        databaseConnection.createUser();
-
+        databaseConnection.buyItem("4");
         try{
             server = new ServerSocket(123, 100);
             while (true){
