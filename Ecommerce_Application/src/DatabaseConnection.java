@@ -17,7 +17,7 @@ public class DatabaseConnection {
      * Adds a user's information to the database
      * @param accountInfo String, account info in format `username,password,buy,sell`.
      */
-    public void createUser(String accountInfo){
+    public String createUser(String accountInfo){
         String[] arr = accountInfo.split(",");
 
         try {
@@ -27,7 +27,7 @@ public class DatabaseConnection {
             //create Statement for querying database
             statement = connection.createStatement();
 
-            String query = " INSERT INTO users (username,password,buy,sell) VALUES ('Brad', '456','1', '1')";
+            String query = " INSERT INTO users (username,password,buy,sell) VALUES ('"+arr[0]+"', '"+arr[1]+"','"+arr[2]+"', '"+arr[3]+"')";
 
             statement.executeUpdate(query);
 
@@ -43,6 +43,8 @@ public class DatabaseConnection {
                 e.printStackTrace();
             }//end catch
         }
+
+        return accountInfo;
     }
 
     /**
@@ -72,8 +74,8 @@ public class DatabaseConnection {
             while (resultSet.next()) {
                 if(resultSet.getString(2).equals(arr[0]) && resultSet.getString(3).equals(arr[1])){
                     output = "";
-                    for(int i = 1; i < numberOfColumns; i++) {
-                        if (i + 1 != numberOfColumns) {
+                    for(int i = 2; i <= numberOfColumns; i++) {
+                        if (i != numberOfColumns) {
                             output += resultSet.getString(i) + ",";
 
                         } else {
@@ -200,8 +202,8 @@ public class DatabaseConnection {
             int numberOfColumns = metaData.getColumnCount();
 
             while (resultSet.next()) {
-                for (int i = 1; i < numberOfColumns; i++) {
-                    if (i + 1 != numberOfColumns) {
+                for (int i = 1; i <= numberOfColumns; i++) {
+                    if (i  != numberOfColumns) {
                         itemList += resultSet.getString(i) + ",";
 
                     } else {

@@ -119,24 +119,26 @@ public class Server {
                 String validationStatus = "";
 
                 //Create user
-                if(messageArray[0] == "0") {
-                    databaseConnection.createUser(messageWithoutFirstIndex);
+                if(messageArray[0].equals("0")) {
+                    validationStatus = databaseConnection.createUser(messageWithoutFirstIndex);
+                    System.out.println(validationStatus);
                 }
                 //Login
-                else if(messageArray[0] == "1"){
+                else if(messageArray[0].equals("1")){
 
                     validationStatus = databaseConnection.validateLogin(messageWithoutFirstIndex);
+                    System.out.println(validationStatus);
                 }
                 //Sell
-                else if(messageArray[0] == "2"){
+                else if(messageArray[0].equals("2")){
                     databaseConnection.buyItem(messageWithoutFirstIndex);
                 }
                 //Buy
-                else if(messageArray[0] == "3"){
+                else if(messageArray[0].equals("3")){
                     validationStatus = databaseConnection.buyItem(messageWithoutFirstIndex);
 
                 }
-                System.out.println(message);
+//                System.out.println(message);
             } catch (ClassNotFoundException classNotFoundException){
                 System.out.println("Unknown object type received");
             }
