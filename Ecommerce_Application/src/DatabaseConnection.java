@@ -7,9 +7,10 @@ public class DatabaseConnection {
     final String PASSWORD = "engr_class030-xyz";
 
 
-    Connection connection = null;
-    Statement statement = null;
-    ResultSet resultSet = null;
+    private Connection connection = null;
+    private Statement statement = null;
+    private ResultSet resultSet = null;
+    private ResultSetMetaData metaData = null;
 
 
     public void connect(){
@@ -25,12 +26,12 @@ public class DatabaseConnection {
             resultSet = statement.executeQuery("SELECT * FROM `items`");
 
             //process query results
-            ResultSetMetaData metaData = resultSet.getMetaData();
+            metaData = resultSet.getMetaData();
             int numberOfColumns = metaData.getColumnCount();
-//
-//            for(int i=1;i<numberOfColumns;i++){
-//                System.out.println(metaData.getColumnName(i));
-//            }
+
+            //for(int i=1;i<numberOfColumns;i++){
+            //    System.out.println(metaData.getColumnName(i));
+            //}
 
             while (resultSet.next()){
                 for(int i=1; i<numberOfColumns;i++){
