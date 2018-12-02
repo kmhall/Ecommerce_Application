@@ -4,22 +4,16 @@ import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.ServerSocket;
 import java.net.Socket;
 
 /**
  * Java class to act as server for clients, will communicate information between database and clients
  */
-public class Server {
+public class Server implements Runnable{
     /**
      * Instance of DatabaseConnection to allow database calls
      */
     private DatabaseConnection databaseConnection;
-
-    /**
-     * ServerSocket object to assign a specific port to the server
-     */
-    private ServerSocket server; // server socket
 
     /**
      * Socket object to allow client connections to server
@@ -40,37 +34,8 @@ public class Server {
      * Server class constructor, creates and initializes the ServerSocket object, also
      * pulls data from database
      */
-    public Server(){
-
-        databaseConnection = new DatabaseConnection();
-
-        try{
-            server = new ServerSocket(123, 100);
-            while (true){
-                try{
-                    waitForConnection();
-                    getStreams();
-                    processConnection();
-                }
-                catch (EOFException eofException){
-                    System.out.println("Server terminated connection");
-                }
-                finally {
-                    closeConnections();
-                }
-            }
-        }
-        catch (IOException ioException){
-            ioException.printStackTrace();
-        }
-    }
-
-    /**
-     * Connects to client and initializes Socket object
-     * @throws IOException if connection failed, throws this exception
-     */
-    private void waitForConnection() throws IOException{
-        connection = server.accept();
+    public Server(Socket connection){
+        this.connection = connection;
     }
 
     /**
@@ -174,6 +139,28 @@ public class Server {
         }
     }
 
+    @Override
+    public void run() {
+        databaseConnection = new DatabaseConnection();
+
+        try{
+            while (true){
+                try{
+                    getStreams();
+                    processConnection();
+                }
+                catch (EOFException eofException){
+                    System.out.println("Server terminated connection");
+                }
+                finally {
+                    closeConnections();
+                }
+            }
+        }
+        catch (IOException ioException){
+            ioException.printStackTrace();
+        }
+    }
 }
 
 
