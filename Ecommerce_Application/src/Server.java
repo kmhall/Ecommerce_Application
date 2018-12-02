@@ -12,7 +12,7 @@ import java.net.Socket;
  */
 public class Server {
     /**
-     * Database connection
+     * Instance of DatabaseConnection to allow database calls
      */
     private DatabaseConnection databaseConnection;
 
@@ -43,7 +43,6 @@ public class Server {
     public Server(){
 
         databaseConnection = new DatabaseConnection();
-        databaseConnection.connect();
 
         try{
             server = new ServerSocket(123, 100);
@@ -92,8 +91,14 @@ public class Server {
      * @throws IOException if connection failed, throws this exception
      */
     private void processConnection() throws IOException{
+
+
         String message = "Connection Successful";
         sendData(message);
+
+        String itemList  = databaseConnection.getItems();
+        sendData(itemList);
+
         do {
             try{
                 message = (String) input.readObject();
