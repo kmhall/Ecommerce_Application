@@ -179,7 +179,7 @@ public class DatabaseConnection {
             statement = connection.createStatement();
 
             System.out.println("User "+ arr[3] + "placed +"+ arr[0] +"on the market for $" + arr[1]);
-            String query = " INSERT INTO items (item,price,description,seller) VALUES ('Temp', '5000','Too cool for school', 'MUAH')";
+            String query = " INSERT INTO items (item,price,description,seller) VALUES ('"+arr[0]+"', '"+arr[1]+"','"+arr[2]+"', '"+arr[3]+"')";
 
             statement.executeUpdate(query);
 

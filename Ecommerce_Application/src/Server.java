@@ -153,7 +153,7 @@ public class Server{
                 }
                 //Sell
                 else if(messageArray[0].equals("2")){
-                    databaseConnection.buyItem(messageWithoutFirstIndex);
+                    databaseConnection.sellItem(messageWithoutFirstIndex);
                 }
                 //Buy
                 else if(messageArray[0].equals("3")){
