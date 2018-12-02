@@ -260,14 +260,13 @@ public class Client extends JFrame {
                             public void actionPerformed(ActionEvent e) {
                                 String message = "1,";
                                 if (username.getText().equals("") || password.getText().equals("")){
+                                    JOptionPane.showMessageDialog(null, "Please fill in all fields");
+                                }
+                                else {
                                     message = message + username.getText() + "," + password.getText();
                                     sendData(message);
                                     loggingin.dispatchEvent(new WindowEvent(loggingin, WindowEvent.WINDOW_CLOSING));
                                 }
-                                else {
-                                    JOptionPane.showMessageDialog(null, "Please fill in all fields");
-                                }
-
                             }
                         }
                 );
