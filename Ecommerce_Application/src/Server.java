@@ -69,6 +69,7 @@ public class Server{
 
 
         public ConnectionsFromServer(Socket connection) {
+
             databaseConnection = new DatabaseConnection();
             this.connection = connection;
             connections.add(this);

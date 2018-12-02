@@ -127,6 +127,7 @@ public class DatabaseConnection {
      */
     public String buyItem(String id){
         String output = "invalidItem";
+        String sellerEmail = "";
         try {
             //establish connection to database
             connection = DriverManager.getConnection(DATABASE_URL,USERNAME,PASSWORD);
@@ -138,6 +139,8 @@ public class DatabaseConnection {
 
             while (resultSet.next()){
                 if(resultSet.getInt(1) == Integer.parseInt(id)){
+                    sellerEmail = "kylehall484@gmail.com";
+                    //sellerEmail = resultSet.getString(6);
                     output = id;
                     break;
                 }
