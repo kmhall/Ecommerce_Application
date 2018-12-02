@@ -136,26 +136,28 @@ public class Server{
                         }
                     }
 
-                    String validationStatus = "";
+                String validationStatus;
 
-                    //Create user
-                    if(messageArray[0].equals("0")) {
-                        validationStatus = databaseConnection.createUser(messageWithoutFirstIndex);
-                        System.out.println(validationStatus);
-                    }
-                    //Login
-                    else if(messageArray[0].equals("1")){
-                        validationStatus = databaseConnection.validateLogin(messageWithoutFirstIndex);
-                        System.out.println(validationStatus);
-                        sendData(validationStatus);
-                    }
-                    //Sell
-                    else if(messageArray[0].equals("2")){
-                        databaseConnection.buyItem(messageWithoutFirstIndex);
-                    }
-                    //Buy
-                    else if(messageArray[0].equals("3")){
-                        validationStatus = databaseConnection.buyItem(messageWithoutFirstIndex);
+                //Create user
+                if(messageArray[0].equals("0")) {
+                    validationStatus = databaseConnection.createUser(messageWithoutFirstIndex);
+                    sendData(validationStatus);
+                    System.out.println(validationStatus);
+                }
+                //Login
+                else if(messageArray[0].equals("1")){
+
+                    validationStatus = databaseConnection.validateLogin(messageWithoutFirstIndex);
+                    System.out.println(validationStatus);
+                    sendData(validationStatus);
+                }
+                //Sell
+                else if(messageArray[0].equals("2")){
+                    databaseConnection.buyItem(messageWithoutFirstIndex);
+                }
+                //Buy
+                else if(messageArray[0].equals("3")){
+                    validationStatus = databaseConnection.buyItem(messageWithoutFirstIndex);
 
                     }
 //                System.out.println(message);

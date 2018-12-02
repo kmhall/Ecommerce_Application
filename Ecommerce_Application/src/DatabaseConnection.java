@@ -20,6 +20,8 @@ public class DatabaseConnection {
     public String createUser(String accountInfo){
         String[] arr = accountInfo.split(",");
 
+        Boolean userNameInDatabase = false;
+
         try {
             //establish connection to database
             connection = DriverManager.getConnection(DATABASE_URL,USERNAME,PASSWORD);
@@ -27,15 +29,25 @@ public class DatabaseConnection {
             //create Statement for querying database
             statement = connection.createStatement();
 
-            String query = " INSERT INTO users (username,password,buy,sell) VALUES ('"+arr[0]+"', '"+arr[1]+"','"+arr[2]+"', '"+arr[3]+"')";
+            resultSet = statement.executeQuery("SELECT * FROM `users`");
 
-            statement.executeUpdate(query);
+            while (resultSet.next()){
+                    if(resultSet.getString(2).equals(arr[0])){
+                        userNameInDatabase = true;
+                    }
+            }
+            if(userNameInDatabase == false){
+                String query = " INSERT INTO users (username,password,buy,sell) VALUES ('"+arr[0]+"', '"+arr[1]+"','"+arr[2]+"', '"+arr[3]+"')";
+                statement.executeUpdate(query);
+            }
+
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
         finally {
             try {
+                resultSet.close();
                 statement.close();
                 connection.close();
             } //end try
@@ -44,6 +56,11 @@ public class DatabaseConnection {
             }//end catch
         }
 
+        if(userNameInDatabase){
+            System.out.println("Username in database");
+            return "userInDatabase";
+        }
+        System.out.println("Inserted account info into database" + accountInfo);
         return accountInfo;
     }
 
@@ -56,7 +73,7 @@ public class DatabaseConnection {
 
         String[] arr = accountInfo.split(",");
 
-        String output = null;
+        String output =  "incorrectCredentials";
         try {
             //establish connection to database
             connection = DriverManager.getConnection(DATABASE_URL, USERNAME, PASSWORD);
