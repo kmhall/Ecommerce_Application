@@ -416,6 +416,8 @@ public class Client extends JFrame {
                 JFrame sellItem = new JFrame("Item to sell");
                 sellItem.setSize(350, 200);
                 sellItem.setLayout(new BoxLayout(sellItem.getContentPane(), BoxLayout.Y_AXIS));
+                buy.setEnabled(false);
+                sell.setEnabled(false);
 
                 JPanel itemNamePanel = new JPanel();
                 itemNamePanel.setLayout(new FlowLayout());
@@ -460,6 +462,13 @@ public class Client extends JFrame {
                         }
                 );
 
+                sellItem.addWindowListener(new WindowAdapter() {
+                    @Override
+                    public void windowClosing(WindowEvent e) {
+                        buy.setEnabled(true);
+                        sell.setEnabled(true);
+                    }
+                });
 
                 sellItem.add(itemNamePanel);
                 sellItem.add(pricePanel);
