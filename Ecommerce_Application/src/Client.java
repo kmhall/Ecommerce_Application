@@ -10,6 +10,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.SocketException;
 
 /**
  * Java class to act as client for server, will have GUI for user interaction
@@ -103,6 +104,13 @@ public class Client extends JFrame {
         buy.addActionListener(handler);
         sell.addActionListener(handler);
 
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                closeConnections();
+            }
+        });
+
         setSize(600,600);
         setVisible(true);
     }
@@ -177,6 +185,8 @@ public class Client extends JFrame {
                 }
             } catch (ClassNotFoundException classNotFoundException){
                 displayMessage("\nUnknown object type received");
+            } catch (SocketException s){
+
             }
         } while (!message.equals("Server>> TERMINATE"));
     }
@@ -186,11 +196,9 @@ public class Client extends JFrame {
      * (probably not necessary but added for now just in case)
      */
     private void closeConnections(){
-        //displayMessage("\nClosing connection");
-
         try{
-            output.close();
             input.close();
+            output.close();
             client.close();
         }
         catch (IOException ioException){
