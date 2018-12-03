@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.EOFException;
 import java.io.IOException;
@@ -69,7 +70,7 @@ public class Client extends JFrame {
      */
     public Client(){
         super("Store");
-        setLayout(new BoxLayout(getContentPane(), BoxLayout.PAGE_AXIS));
+        setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 
         buy = new JButton("Buy");
         buy.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -266,27 +267,32 @@ public class Client extends JFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() == logInButton){
+                logInButton.setEnabled(false);
+                createAccount.setEnabled(false);
                 JFrame loggingin = new JFrame("Log In");
-                loggingin.setSize(400, 200);
+                loggingin.setSize(300, 150);
 
                 Container contentPane = loggingin.getContentPane();
 
                 JPanel userNamePanel = new JPanel();
                 userNamePanel.setLayout(new BoxLayout(userNamePanel, BoxLayout.LINE_AXIS));
                 JLabel userNameLabel = new JLabel("Username:");
-                JTextField username = new JTextField();
+                JTextField username = new JTextField(20);
+                username.setMaximumSize( username.getPreferredSize() );
                 userNamePanel.add(userNameLabel);
                 userNamePanel.add(username);
+                userNamePanel.setBorder(BorderFactory.createEmptyBorder(10,0,0,0));
 
                 JPanel passwordPanel = new JPanel();
                 passwordPanel.setLayout(new BoxLayout(passwordPanel, BoxLayout.LINE_AXIS));
                 JLabel passwordLabel = new JLabel("Password:");
-                JTextField password = new JTextField();
+                JTextField password = new JTextField(20);
+                password.setMaximumSize( password.getPreferredSize() );
                 passwordPanel.add(passwordLabel);
                 passwordPanel.add(password);
-                passwordPanel.setBorder(BorderFactory.createEmptyBorder(30,10,30,10));
 
                 JButton submit = new JButton("Log In");
+                submit.setAlignmentX(Component.CENTER_ALIGNMENT);
                 submit.addActionListener(
                         new ActionListener() {
                             @Override
@@ -304,16 +310,26 @@ public class Client extends JFrame {
                         }
                 );
 
+                loggingin.addWindowListener(new WindowAdapter() {
+                    @Override
+                    public void windowClosing(WindowEvent e) {
+                        logInButton.setEnabled(true);
+                        createAccount.setEnabled(true);
+                    }
+                });
+
                 contentPane.add(userNamePanel, BorderLayout.NORTH);
                 contentPane.add(passwordPanel, BorderLayout.CENTER);
                 contentPane.add(submit, BorderLayout.SOUTH);
                 loggingin.setVisible(true);
             }
             else if (e.getSource() == createAccount){
-                JFrame createAccount = new JFrame("Create Account");
-                createAccount.setSize(400, 200);
+                JFrame createAccountFrame = new JFrame("Create Account");
+                createAccountFrame.setSize(400, 150);
+                logInButton.setEnabled(false);
+                createAccount.setEnabled(false);
 
-                Container contentPane = createAccount.getContentPane();
+                Container contentPane = createAccountFrame.getContentPane();
 
                 JPanel userNamePanel = new JPanel();
                 userNamePanel.setLayout(new BoxLayout(userNamePanel, BoxLayout.LINE_AXIS));
@@ -321,14 +337,15 @@ public class Client extends JFrame {
                 JTextField username = new JTextField();
                 userNamePanel.add(userNameLabel);
                 userNamePanel.add(username);
+                userNamePanel.setBorder(BorderFactory.createEmptyBorder(10,0,0,0));
 
                 JPanel passwordPanel = new JPanel();
                 passwordPanel.setLayout(new BoxLayout(passwordPanel, BoxLayout.LINE_AXIS));
                 JLabel passwordLabel = new JLabel("Password:");
-                JTextField password = new JTextField();
+                JTextField password = new JTextField(20);
+                password.setMaximumSize( password.getPreferredSize() );
                 passwordPanel.add(passwordLabel);
                 passwordPanel.add(password);
-                //passwordPanel.setBorder(BorderFactory.createEmptyBorder(30,10,30,10));
 
                 JPanel buyerAndSeller = new JPanel();
                 buyerAndSeller.setLayout(new BoxLayout(buyerAndSeller, BoxLayout.LINE_AXIS));
@@ -342,6 +359,7 @@ public class Client extends JFrame {
                 buyerAndSeller.add(sellerCheck);
 
                 JButton submit = new JButton("Create Account");
+                submit.setAlignmentX(Component.CENTER_ALIGNMENT);
                 submit.addActionListener(
                         new ActionListener() {
                             @Override
@@ -365,30 +383,38 @@ public class Client extends JFrame {
                                         message = message + "0" + "," + "1";
                                     }
                                     sendData(message);
-                                    createAccount.dispatchEvent(new WindowEvent(createAccount, WindowEvent.WINDOW_CLOSING));
+                                    createAccountFrame.dispatchEvent(new WindowEvent(createAccountFrame, WindowEvent.WINDOW_CLOSING));
                                 }
                             }
                         }
                 );
 
+                createAccountFrame.addWindowListener(new WindowAdapter() {
+                    @Override
+                    public void windowClosing(WindowEvent e) {
+                        logInButton.setEnabled(true);
+                        createAccount.setEnabled(true);
+                    }
+                });
+
                 contentPane.add(userNamePanel, BorderLayout.NORTH);
                 contentPane.add(passwordPanel, BorderLayout.CENTER);
                 contentPane.add(buyerAndSeller, BorderLayout.EAST);
                 contentPane.add(submit, BorderLayout.SOUTH);
-                createAccount.setVisible(true);
+                createAccountFrame.setVisible(true);
             }
             else if (e.getSource() == buy){
                 String itemID = "3," + buyItemID.getText();
+                buyItemID.setText("");
                 sendData(itemID);
             }
             else if (e.getSource() == sell){
                 JFrame sellItem = new JFrame("Item to sell");
-                sellItem.setSize(400, 200);
-
-                Container contentPane = sellItem.getContentPane();
+                sellItem.setSize(350, 200);
+                sellItem.setLayout(new BoxLayout(sellItem.getContentPane(), BoxLayout.Y_AXIS));
 
                 JPanel itemNamePanel = new JPanel();
-                itemNamePanel.setLayout(new BoxLayout(itemNamePanel, BoxLayout.LINE_AXIS));
+                itemNamePanel.setLayout(new FlowLayout());
                 JLabel itemNameLabel = new JLabel("Item Name:");
                 JTextField itemName = new JTextField(20);
                 itemName.setMaximumSize( itemName.getPreferredSize() );
@@ -396,7 +422,7 @@ public class Client extends JFrame {
                 itemNamePanel.add(itemName);
 
                 JPanel pricePanel = new JPanel();
-                pricePanel.setLayout(new BoxLayout(pricePanel, BoxLayout.LINE_AXIS));
+                pricePanel.setLayout(new FlowLayout());
                 JLabel priceLabel = new JLabel("Price:");
                 JTextField price = new JTextField(20);
                 price.setMaximumSize( price.getPreferredSize() );
@@ -404,7 +430,7 @@ public class Client extends JFrame {
                 pricePanel.add(price);
 
                 JPanel descriptionPanel = new JPanel();
-                descriptionPanel.setLayout(new BoxLayout(descriptionPanel, BoxLayout.LINE_AXIS));
+                descriptionPanel.setLayout(new FlowLayout());
                 JLabel descriptionLabel = new JLabel("Description:");
                 JTextField description = new JTextField(20);
                 description.setMaximumSize( price.getPreferredSize() );
@@ -412,6 +438,7 @@ public class Client extends JFrame {
                 descriptionPanel.add(description);
 
                 JButton submit = new JButton("Sell Item");
+                submit.setAlignmentX(Component.CENTER_ALIGNMENT);
                 submit.addActionListener(
                         new ActionListener() {
                             @Override
@@ -429,15 +456,11 @@ public class Client extends JFrame {
                         }
                 );
 
-                JPanel info = new JPanel();
-                info.setLayout(new BoxLayout(info, BoxLayout.PAGE_AXIS));
-                info.add(descriptionPanel, BorderLayout.NORTH);
-                info.add(pricePanel, BorderLayout.SOUTH);
 
-
-                contentPane.add(itemNamePanel, BorderLayout.NORTH);
-                contentPane.add(info, BorderLayout.CENTER);
-                contentPane.add(submit, BorderLayout.SOUTH);
+                sellItem.add(itemNamePanel);
+                sellItem.add(pricePanel);
+                sellItem.add(descriptionPanel);
+                sellItem.add(submit);
                 sellItem.setVisible(true);
             }
         }
