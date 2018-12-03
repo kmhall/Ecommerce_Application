@@ -125,7 +125,7 @@ public class Client extends JFrame {
     private void connectToServer() throws IOException{
         //displayMessage("Attempting connection\n");
 
-        client = new Socket( InetAddress.getLocalHost(), 123);
+        client = new Socket( InetAddress.getLocalHost(), 12345);
 
         //displayMessage("Connected to: " + client.getInetAddress().getHostName());
     }
@@ -348,7 +348,7 @@ public class Client extends JFrame {
             }
             else if (e.getSource() == sell){
                 JFrame sellItem = new JFrame("Item to sell");
-                sellItem.setSize(400, 300);
+                sellItem.setSize(400, 200);
 
                 Container contentPane = sellItem.getContentPane();
 
@@ -405,9 +405,9 @@ public class Client extends JFrame {
 
                 JPanel info = new JPanel();
                 info.setLayout(new BoxLayout(info, BoxLayout.PAGE_AXIS));
-                info.add(sellerNamePanel, BorderLayout.NORTH);
+                info.add(descriptionPanel, BorderLayout.NORTH);
                 info.add(pricePanel, BorderLayout.CENTER);
-                info.add(descriptionPanel, BorderLayout.SOUTH);
+                info.add(sellerNamePanel, BorderLayout.SOUTH);
 
                 contentPane.add(itemNamePanel, BorderLayout.NORTH);
                 contentPane.add(info, BorderLayout.CENTER);

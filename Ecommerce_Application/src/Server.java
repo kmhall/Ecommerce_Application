@@ -31,7 +31,7 @@ public class Server{
         try{
             connections = new ArrayList<>();
 
-            server = new ServerSocket(123, 100);
+            server = new ServerSocket(12345, 100);
 
             while (true){
                 Socket socket = server.accept();
