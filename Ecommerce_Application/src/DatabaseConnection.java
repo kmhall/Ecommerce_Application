@@ -1,4 +1,6 @@
 import java.sql.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DatabaseConnection {
 
@@ -225,6 +227,40 @@ public class DatabaseConnection {
         }
     }
 
+    private Map getRatings(){
+
+        Map<String,String> rankings = new HashMap<>();
+
+        try{
+            //establish connection to database
+            connection = DriverManager.getConnection(DATABASE_URL, USERNAME, PASSWORD);
+
+            //create Statement for querying database
+            statement = connection.createStatement();
+
+            //query database
+            resultSet = statement.executeQuery("SELECT * FROM `users`");
+
+            while(resultSet.next()) {
+                rankings.put(resultSet.getString(2),resultSet.getString(6));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        finally {
+            try {
+                resultSet.close();
+                statement.close();
+                connection.close();
+            } //end try
+            catch (SQLException e) {
+                e.printStackTrace();
+            }//end catch  }
+        }
+        return rankings;
+    }
+
     /**
      * Gets all the items within the items database.
      *
@@ -233,6 +269,8 @@ public class DatabaseConnection {
      */
     public String getItems() {
         String itemList = "";
+
+        Map<String,String> rankings = getRatings();
 
         try {
             //establish connection to database
@@ -256,8 +294,10 @@ public class DatabaseConnection {
                     } else {
                         itemList += resultSet.getString(i) + ",";
                     }
-                }//end for
 
+                }//end for
+                //Add rating by specifying the username Map key-value [username, ranking]
+                itemList+= rankings.get(resultSet.getString(5)) + ",";
 
             }//end while
         } catch (SQLException e) {

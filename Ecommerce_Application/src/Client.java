@@ -243,6 +243,10 @@ public class Client extends JFrame {
                                 }
                                 else if (counter == 5){
                                     displayArea.append("---Seller: " + item + "\n");
+                                    counter++;
+                                }
+                                else if (counter == 6){
+                                    displayArea.append("---Ranking: " + item + "\n");
                                     displayArea.append("\n");
                                     counter = 1;
                                 }
