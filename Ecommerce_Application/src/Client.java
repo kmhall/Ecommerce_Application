@@ -368,8 +368,20 @@ public class Client extends JFrame {
                         new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) {
-                                if (username.getText().equals("")|| username.getText().equals("") || (!buyerCheck.isSelected() && !sellerCheck.isSelected())){
+                                if (username.getText().equals("")|| password.getText().equals("") || (!buyerCheck.isSelected() && !sellerCheck.isSelected())){
                                     JOptionPane.showMessageDialog(null, "Please fill in all fields");
+                                }
+                                else if(username.getText().length() >30){
+                                    JOptionPane.showMessageDialog(null, "Username must be under 30 characters");
+                                }
+                                else if(password.getText().length() >30){
+                                    JOptionPane.showMessageDialog(null, "Password must be under 30 characters");
+                                }
+                                else if(username.getText().contains(",")){
+                                    JOptionPane.showMessageDialog(null, "Username cannot contain a comma");
+                                }
+                                else if(password.getText().contains(",")){
+                                    JOptionPane.showMessageDialog(null, "Password cannot contain a comma");
                                 }
                                 else{
                                     String message = "0,";
@@ -383,7 +395,7 @@ public class Client extends JFrame {
                                             message = message + "," + "0";
                                         }
                                     }
-                                    else if (sellerCheck.isSelected()){
+                                    else if (sellerCheck.isSelected() ){
                                         message = message + "0" + "," + "1";
                                     }
                                     sendData(message);
@@ -408,9 +420,19 @@ public class Client extends JFrame {
                 createAccountFrame.setVisible(true);
             }
             else if (e.getSource() == buy){
-                String itemID = "3," + buyItemID.getText();
-                buyItemID.setText("");
-                sendData(itemID);
+
+                if(buyItemID.getText().length() == 0){
+                    JOptionPane.showMessageDialog(null, "No I.D. entered");
+                }
+                 else if(!buyItemID.getText().matches("[0-9]+")  ){
+                    JOptionPane.showMessageDialog(null, "Item I.D. must be an integer");
+                }
+
+                else {
+                     String itemID = "3," + buyItemID.getText();
+                     buyItemID.setText("");
+                     sendData(itemID);
+                 }
             }
             else if (e.getSource() == sell){
                 JFrame sellItem = new JFrame("Item to sell");
@@ -452,7 +474,24 @@ public class Client extends JFrame {
                                if (itemName.getText().equals("") || price.getText().equals("") || description.getText().equals("")) {
                                    JOptionPane.showMessageDialog(null, "Please fill in all fields");
                                }
+                               else if(itemName.getText().length() > 30){
+                                   JOptionPane.showMessageDialog(null, "Item name must be under 30 characters");
+                               }
+                               else if(price.getText().length() > 9){
+                                   JOptionPane.showMessageDialog(null, "Price must be under 30 characters");
+                               }
+                               else if(description.getText().length() > 200){
+                                   JOptionPane.showMessageDialog(null, "Description must be under 200 characters");
+                               }
+                               else if(itemName.getText().contains(",")){
+                                   JOptionPane.showMessageDialog(null, "Item name cannot have a comma");
+                               }
+                               else if(!price.getText().matches("[0-9]+")){
+                                   JOptionPane.showMessageDialog(null, "Price must be an integer");
+                               }
                                else{
+                                   description.setText(description.getText().replace(",",";"));
+
                                    String message = "2,";
                                    message = message + itemName.getText() + "," + price.getText() + "," + description.getText() + "," + userInfo[0];
                                    sendData(message);

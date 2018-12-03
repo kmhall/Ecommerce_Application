@@ -1,6 +1,3 @@
-import java.net.ServerSocket;
-import java.net.Socket;
-
 /**
  * Tests the Server class
  */
