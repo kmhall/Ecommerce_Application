@@ -233,7 +233,7 @@ public class DatabaseConnection {
                         itemList += resultSet.getString(i) + ",";
 
                     } else {
-                        itemList += resultSet.getString(i) + "\n";
+                        itemList += resultSet.getString(i) + ",";
                     }
                 }//end for
             }//end while

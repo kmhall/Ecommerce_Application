@@ -60,6 +60,11 @@ public class Client extends JFrame {
     private JButton createAccount;
 
     /**
+     * when user logs in or creates an account, info is saved here
+     */
+    private String[] userInfo;
+
+    /**
      * Constructor for Client class, initializes Swing components
      */
     public Client(){
@@ -70,6 +75,7 @@ public class Client extends JFrame {
         buy.setAlignmentX(Component.CENTER_ALIGNMENT);
         buyItemID = new JTextField(20);
         buyItemID.setMaximumSize( buyItemID.getPreferredSize() );
+        buyItemID.setText("Enter item I.D. to buy item.");
         sell = new JButton("Sell item");
         sell.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -123,11 +129,7 @@ public class Client extends JFrame {
      * @throws IOException if connection failed, throws this exception
      */
     private void connectToServer() throws IOException{
-        //displayMessage("Attempting connection\n");
-
         client = new Socket( InetAddress.getLocalHost(), 12345);
-
-        //displayMessage("Connected to: " + client.getInetAddress().getHostName());
     }
 
     /**
@@ -139,7 +141,6 @@ public class Client extends JFrame {
         output.flush();
 
         input = new ObjectInputStream(client.getInputStream());
-        //displayMessage("\nGot I/O streams\n");
     }
 
     /**
@@ -152,7 +153,7 @@ public class Client extends JFrame {
             try{
                 message = (String) input.readObject();
                 if (message.split(",")[0].equals("items")){
-                    displayMessage("\n" + message);
+                    displayMessage(message);
                 }
                 else if(message.equals("userInDatabase")){
                     JOptionPane.showMessageDialog(null, "Username already taken\n");
@@ -162,6 +163,7 @@ public class Client extends JFrame {
                 }
                 else{
                     String[] person = message.split(",");
+                    userInfo = person; //saves to instance variable
                     if (person[2].equals("1")){
                         buyItemID.setVisible(true);
                         buy.setVisible(true);
@@ -217,7 +219,40 @@ public class Client extends JFrame {
                 new Runnable() {
                     @Override
                     public void run() {
-                        displayArea.setText(messageToDisplay);
+                        displayArea.setText("");
+                        String[] itemInfo = messageToDisplay.split(",");
+                        int counter = 0;
+                        for (String item: itemInfo){
+                            if (counter!=0){
+                                if (counter == 1){
+                                    displayArea.append("Item I.D. = " + item + "\n");
+                                    counter++;
+                                }
+                                else if (counter == 2){
+                                    displayArea.append("---Name: " + item + "\n");
+                                    counter++;
+                                }
+                                else if (counter == 3){
+                                    displayArea.append("---Price: $" + item + "\n");
+                                    counter++;
+                                }
+                                else if (counter == 4){
+                                    displayArea.append("---Description: " + item + "\n");
+                                    counter++;
+                                }
+                                else if (counter == 5){
+                                    displayArea.append("---Seller: " + item + "\n");
+                                    displayArea.append("\n");
+                                    counter = 1;
+                                }
+                            }
+                            else{
+                                counter++;
+                            }
+                        }
+                        if (!buy.isVisible() && !sell.isVisible()){
+                            displayArea.append("Log in or create account to buy items.");
+                        }
                     }
                 }
         );
@@ -360,15 +395,6 @@ public class Client extends JFrame {
                 itemNamePanel.add(itemNameLabel);
                 itemNamePanel.add(itemName);
 
-                JPanel sellerNamePanel = new JPanel();
-                sellerNamePanel.setLayout(new BoxLayout(sellerNamePanel, BoxLayout.LINE_AXIS));
-                JLabel sellerNameLabel = new JLabel("Seller Name:");
-                JTextField sellerName = new JTextField(20);
-                sellerName.setMaximumSize( sellerName.getPreferredSize() );
-                sellerNamePanel.add(sellerNameLabel);
-                sellerNamePanel.add(sellerName);
-                //passwordPanel.setBorder(BorderFactory.createEmptyBorder(30,10,30,10));
-
                 JPanel pricePanel = new JPanel();
                 pricePanel.setLayout(new BoxLayout(pricePanel, BoxLayout.LINE_AXIS));
                 JLabel priceLabel = new JLabel("Price:");
@@ -390,12 +416,12 @@ public class Client extends JFrame {
                         new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) {
-                               if (itemName.getText().equals("") || sellerName.getText().equals("") || price.getText().equals("") || description.getText().equals("")) {
+                               if (itemName.getText().equals("") || price.getText().equals("") || description.getText().equals("")) {
                                    JOptionPane.showMessageDialog(null, "Please fill in all fields");
                                }
                                else{
                                    String message = "2,";
-                                   message = message + itemName.getText() + "," + price.getText() + "," + description.getText() + "," + sellerName.getText();
+                                   message = message + itemName.getText() + "," + price.getText() + "," + description.getText() + "," + userInfo[0];
                                    sendData(message);
                                    sellItem.dispatchEvent(new WindowEvent(sellItem, WindowEvent.WINDOW_CLOSING));
                                }
@@ -406,8 +432,8 @@ public class Client extends JFrame {
                 JPanel info = new JPanel();
                 info.setLayout(new BoxLayout(info, BoxLayout.PAGE_AXIS));
                 info.add(descriptionPanel, BorderLayout.NORTH);
-                info.add(pricePanel, BorderLayout.CENTER);
-                info.add(sellerNamePanel, BorderLayout.SOUTH);
+                info.add(pricePanel, BorderLayout.SOUTH);
+
 
                 contentPane.add(itemNamePanel, BorderLayout.NORTH);
                 contentPane.add(info, BorderLayout.CENTER);
