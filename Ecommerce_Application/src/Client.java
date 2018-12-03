@@ -268,6 +268,10 @@ public class Client extends JFrame {
      * @see ActionListener
      */
     private class ActionHandler implements ActionListener {
+        /**
+         * Function that is overridden from ActionListener. Handles all button presses.
+         * @param e ActionEvent object that actually registers the action
+         */
         @Override
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() == logInButton){
@@ -368,7 +372,7 @@ public class Client extends JFrame {
                         new ActionListener() {
                             @Override
                             public void actionPerformed(ActionEvent e) {
-                                if (username.getText().equals("")|| username.getText().equals("") || (!buyerCheck.isSelected() && !sellerCheck.isSelected())){
+                                if (username.getText().equals("")|| password.getText().equals("") || (!buyerCheck.isSelected() && !sellerCheck.isSelected())){
                                     JOptionPane.showMessageDialog(null, "Please fill in all fields");
                                 }
                                 else{
