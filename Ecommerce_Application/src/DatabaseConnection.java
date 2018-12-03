@@ -118,6 +118,24 @@ public class DatabaseConnection {
         return output;
     }
 
+    private void incrementRating(String user){
+        try {
+            //establish connection to database
+            connection = DriverManager.getConnection(DATABASE_URL,USERNAME,PASSWORD);
+
+            //create Statement for querying database
+            statement = connection.createStatement();
+
+            String query = " UPDATE users SET `ranking` = `ranking` + 25 WHERE `username` = '"+user+"'";
+
+            statement.executeUpdate(query);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     /**
      * See if the item is within the database, if it is: remove the item.
      * Otherwise do nothing and return that the input was invalid.
@@ -125,9 +143,12 @@ public class DatabaseConnection {
      * @param id The id of the item attempted to be bought
      * @return If the id is valid, the id will be returned, otherwise return null
      */
+
+
     public String buyItem(String id){
         String output = "invalidItem";
-        String sellerEmail = "";
+
+        String user;
         try {
             //establish connection to database
             connection = DriverManager.getConnection(DATABASE_URL,USERNAME,PASSWORD);
@@ -139,8 +160,8 @@ public class DatabaseConnection {
 
             while (resultSet.next()){
                 if(resultSet.getInt(1) == Integer.parseInt(id)){
-                    sellerEmail = "kylehall484@gmail.com";
-                    //sellerEmail = resultSet.getString(6);
+                    user = resultSet.getString(5);
+                    incrementRating(user);
                     output = id;
                     break;
                 }
@@ -236,6 +257,8 @@ public class DatabaseConnection {
                         itemList += resultSet.getString(i) + "\n";
                     }
                 }//end for
+
+
             }//end while
         } catch (SQLException e) {
             e.printStackTrace();
