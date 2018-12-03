@@ -68,6 +68,10 @@ public class Server{
         private ObjectInputStream input; // input stream to client
 
 
+        /**
+         * Constructor for the ConnectionsFromServer class, sets up socket connection to client
+         * @param connection
+         */
         public ConnectionsFromServer(Socket connection) {
 
             databaseConnection = new DatabaseConnection();
@@ -75,6 +79,9 @@ public class Server{
             connections.add(this);
         }
 
+        /**
+         * The overridden run method that starts the thread
+         */
         @Override
         public void run() {
             try{
@@ -182,6 +189,9 @@ public class Server{
             }
         }
 
+        /**
+         * Sends an update to all the clients connected to the server name
+         */
         private void sendToAllClients(){
             String x = "items,";
              x += databaseConnection.getItems();

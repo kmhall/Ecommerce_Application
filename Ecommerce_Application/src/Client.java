@@ -268,6 +268,10 @@ public class Client extends JFrame {
      * @see ActionListener
      */
     private class ActionHandler implements ActionListener {
+        /**
+         * Function that is overridden from ActionListener. Handles all button presses.
+         * @param e ActionEvent object that actually registers the action
+         */
         @Override
         public void actionPerformed(ActionEvent e) {
             if (e.getSource() == logInButton){

@@ -2,18 +2,39 @@ import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Class to connect to SQL database
+ */
 public class DatabaseConnection {
-
+    /**
+     * String that specifies url of database
+     */
     private final String DATABASE_URL = "jdbc:mysql://s-l112.engr.uiowa.edu/engr_class030";
+
+    /**
+     * String that specifies username of database account
+     */
     private final String USERNAME = "engr_class030";
+
+    /**
+     * String that specifies password of database account
+     */
     private final String PASSWORD = "engr_class030-xyz";
 
+    /**
+     * Sets a connection to the database
+     */
+    private Connection connection = null;
 
-    Connection connection = null;
-    Statement statement = null;
-    ResultSet resultSet = null;
+    /**
+     * Creates an object to execute queries to database
+     */
+    private Statement statement = null;
 
-
+    /**
+     * Query of results from database
+     */
+    private ResultSet resultSet = null;
 
     /**
      * Adds a user's information to the database
@@ -120,6 +141,10 @@ public class DatabaseConnection {
         return output;
     }
 
+    /**
+     * increments the rating of a seller
+     * @param user a String of the seller
+     */
     private void incrementRating(String user){
         try {
             //establish connection to database
@@ -145,8 +170,6 @@ public class DatabaseConnection {
      * @param id The id of the item attempted to be bought
      * @return If the id is valid, the id will be returned, otherwise return null
      */
-
-
     public String buyItem(String id){
         String output = "invalidItem";
 
@@ -227,6 +250,10 @@ public class DatabaseConnection {
         }
     }
 
+    /**
+     * Grabs ratings from all users in database
+     * @return Map of users with usernames and ratings
+     */
     private Map getRatings(){
 
         Map<String,String> rankings = new HashMap<>();
